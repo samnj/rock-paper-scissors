@@ -99,3 +99,6 @@ function playGame () {
 let userScore = 0
 let computerScore = 0
 let round = 1
+
+const btn = document.querySelectorAll('button')
+btn.forEach(item => item.addEventListener('click', () => {console.log(item.textContent)})) 
