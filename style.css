@@ -29,10 +29,14 @@ body {
 }
 
 section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 70%;
 }
 
-.btns-container {
+.btns-container,
+.play-again-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,4 +51,11 @@ section {
 
 .score-container p {
   margin-bottom: 0.5rem;
+}
+
+.btns-container,
+.round-container,
+.score-container,
+.play-again-btn {
+  display: none;
 }

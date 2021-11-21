@@ -24,81 +24,70 @@ function getComputerMove () {
   return PICKS[randomIndex]
 }
 
-function getPickByName (input) {
-  return PICKS.findIndex(pick => pick.name === input)
+function getUserMove(userSelection) {
+  let userPickIndex = getPickByName(userSelection)
+  return PICKS[userPickIndex]
 }
 
-function getUserMove () {
-  let userPickIndex
-  while (true) {
-    const userInput = prompt('Type rock, paper or scissors: ').toLowerCase()
-    userPickIndex = getPickByName(userInput)
-    if (userPickIndex === -1) {
-      console.log('Invalid input. Pick either rock, paper or scissors.')
-      displaySeparatorMessage()
-    } else {
-      break
-    }
-  }
-  return PICKS[userPickIndex]
+function getPickByName (input) {
+  return PICKS.findIndex(pick => pick.name === input)
 }
 
 function isWinner (move, opponentMove) {
   return move.beats(opponentMove)
 }
 
-function displayRoundMessages (userWins, computerWins, userMove, computerMove, round) {
-  console.log(`Round ${round}`)
-  console.log(`You picked ${userMove.name} and I picked ${computerMove.name}.`)
+function getMovesMessage (round, userMove, computerMove, userWins, computerWins) {
+  let message = `ROUND ${round}: you picked ${userMove.name} and I picked ${computerMove.name}.`
   if (userWins) {
-    console.log(`${userMove.name} beats ${userMove.winsOver}. You win the round.`)
+    return message + ` ${capitalizeFirstLetter(userMove.name)} beats ${computerMove.name}. You win the round.`
   } else if (computerWins) {
-    console.log(`${computerMove.name} beats ${computerMove.winsOver}. You lost the round.`)
+    return message + ` ${capitalizeFirstLetter(computerMove.name)} beats ${userMove.name}. You lose the round.`
   } else {
-    console.log('Draw.')
+    message = `ROUND ${round}:`
+    return message + ` we both picked ${userMove.name}. Draw.`
   }
-  console.log(`Your score: ${userScore}`)
-  console.log(`My score: ${computerScore}`)
-  displaySeparatorMessage()
 }
 
-function displayPickMessage () {
-  console.log('Pick either rock, paper or scissors.')
-}
-
-function displaySeparatorMessage () {
-  console.log('---------------------')
-}
-
-function finalScoreMsg (userScore, computerScore) {
-  console.log('You ' + ((userScore > computerScore) ? 'won' : 'lost') + ' the game.')
+function capitalizeFirstLetter (str) {
+  return str[0].toUpperCase() + str.slice(1)
 }
 
 function playGame () {
-
-  displayPickMessage()
-  displaySeparatorMessage()
-
-  while (userScore < 3 && computerScore < 3) {
-    const computerMove = getComputerMove()
-    const userMove = getUserMove()
-    const userWins = isWinner(userMove, computerMove)
-    const computerWins = isWinner(computerMove, userMove)
-    if (userWins) {
-      userScore++
-    } else if (computerWins) {
-      computerScore++
-    }
-    displayRoundMessages(userWins, computerWins, userMove, computerMove, round)
-    round++
-  }
-
-  finalScoreMsg(userScore, computerScore)
+  
 }
 
-let userScore = 0
-let computerScore = 0
-let round = 1
+const playBtn = document.querySelector('.play-game')
+playBtn.addEventListener('click', playGame)
 
-const btn = document.querySelectorAll('button')
-btn.forEach(item => item.addEventListener('click', () => {console.log(item.textContent)})) 
+
+
+let userPoints = 0
+let computerPoints = 0
+let round = 1
+let gameEnded = false
+
+const btn = document.querySelectorAll('.pick-btn')
+btn.forEach(item => item.addEventListener('click', () => playRound(item.textContent)))
+
+function playRound(userSelection) {
+  const movesMessage = document.querySelector('.moves-message')
+  const playerScore = document.querySelector('.player-score')
+  const computerScore = document.querySelector('.computer-score')
+  const finalScore = document.querySelector('.final-score')
+  
+  const userMove = getUserMove(userSelection)
+  const computerMove = getComputerMove()
+  const userWins = isWinner(userMove, computerMove)
+  const computerWins = isWinner(computerMove, userMove)
+
+  if (userWins) {
+    userPoints++
+  } else if (computerWins) {
+    computerPoints++
+  }
+
+  movesMessage.textContent = getMovesMessage(round, userMove, computerMove, userWins, computerWins)
+  round++ 
+  
+}
