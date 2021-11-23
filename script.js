@@ -24,8 +24,8 @@ function getComputerMove () {
   return PICKS[randomIndex]
 }
 
-function getUserMove(userSelection) {
-  let userPickIndex = getPickByName(userSelection)
+function getUserMove (userSelection) {
+  const userPickIndex = getPickByName(userSelection)
   return PICKS[userPickIndex]
 }
 
@@ -53,29 +53,39 @@ function capitalizeFirstLetter (str) {
   return str[0].toUpperCase() + str.slice(1)
 }
 
-function playGame () {
-  
+function showGameStart () {
+  playBtn.style.display = 'none'
+  btnsContainer.style.display = 'flex'
+  movesMessage.style.display = 'block'
+  movesMessage.textContent = ''
+
+  finalScore.style.display = 'none'
+  playAgain.style.display = 'none'
 }
 
-const playBtn = document.querySelector('.play-game')
-playBtn.addEventListener('click', playGame)
+function showScore () {
+  scoreContainer.style.display = 'block'
+}
 
+function showGameEnd () {
+  btnsContainer.style.display = 'none'
+  movesMessage.style.display = 'none'
+  scoreContainer.style.display = 'none'
 
+  finalScore.style.display = 'block'
+  finalScore.textContent = `Final score: user ${userPoints} - computer ${computerPoints}`
 
-let userPoints = 0
-let computerPoints = 0
-let round = 1
-let gameEnded = false
+  playAgain.style.display = 'block'
+}
 
-const btn = document.querySelectorAll('.pick-btn')
-btn.forEach(item => item.addEventListener('click', () => playRound(item.textContent)))
+function playGame () {
+  userPoints = 0
+  computerPoints = 0
+  round = 1
+  showGameStart()
+}
 
-function playRound(userSelection) {
-  const movesMessage = document.querySelector('.moves-message')
-  const playerScore = document.querySelector('.player-score')
-  const computerScore = document.querySelector('.computer-score')
-  const finalScore = document.querySelector('.final-score')
-  
+function playRound (userSelection) {
   const userMove = getUserMove(userSelection)
   const computerMove = getComputerMove()
   const userWins = isWinner(userMove, computerMove)
@@ -88,6 +98,30 @@ function playRound(userSelection) {
   }
 
   movesMessage.textContent = getMovesMessage(round, userMove, computerMove, userWins, computerWins)
-  round++ 
-  
+  round++
+
+  showScore()
+  playerScore.textContent = `Player score = ${userPoints}`
+  computerScore.textContent = `Computer score = ${computerPoints}`
+
+  if (userPoints > 2 || computerPoints > 2) {
+    showGameEnd()
+  }
 }
+
+const playBtn = document.querySelector('.play-game')
+playBtn.addEventListener('click', playGame)
+const btn = document.querySelectorAll('.pick-btn')
+btn.forEach(item => item.addEventListener('click', () => playRound(item.textContent)))
+const btnsContainer = document.querySelector('.btns-container')
+const movesMessage = document.querySelector('.moves-message')
+const scoreContainer = document.querySelector('.score-container')
+const playerScore = document.querySelector('.player-score')
+const computerScore = document.querySelector('.computer-score')
+const finalScore = document.querySelector('.final-score')
+const playAgain = document.querySelector('.play-again-btn')
+playAgain.addEventListener('click', playGame)
+
+let userPoints
+let computerPoints
+let round
