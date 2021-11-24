@@ -25,11 +25,7 @@ function getComputerMove () {
 }
 
 function getUserMove (userSelection) {
-  switch (userSelection) {
-    case 'rock': return PICKS[0]
-    case 'paper': return PICKS[1]
-    case 'scissors': return PICKS[2]
-  }
+  return PICKS.find(pick => pick.name === userSelection)
 }
 
 function isWinner (move, opponentMove) {
