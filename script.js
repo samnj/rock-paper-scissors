@@ -25,12 +25,11 @@ function getComputerMove () {
 }
 
 function getUserMove (userSelection) {
-  const userPickIndex = getPickByName(userSelection)
-  return PICKS[userPickIndex]
-}
-
-function getPickByName (input) {
-  return PICKS.findIndex(pick => pick.name === input)
+  switch (userSelection) {
+    case 'rock': return PICKS[0]
+    case 'paper': return PICKS[1]
+    case 'scissors': return PICKS[2]
+  }
 }
 
 function isWinner (move, opponentMove) {
